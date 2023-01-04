@@ -7,3 +7,6 @@ Bulk resize and crop images from the center, as well as giving them UUIDs. Can a
 
 ## CV Backgrounds
 Various printable backgrounds I used to experiment and add diversity to computer vision datasets
+
+## MultiCam
+Tool to rapidly build datasets via webcam
