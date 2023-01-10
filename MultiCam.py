@@ -1,8 +1,9 @@
 import cv2 as cv
 import time
 import os
+import uuid
 
-vers = 1.0
+vers = 1.1
 
 print('''                                   
  _____     _ _   _ _____           
@@ -14,10 +15,11 @@ print('''
 
 print("\nLoading configs and camera...")
 # Configs
-cam_port = 0    #Change this if you have multiple cameras
-multishot = 1   #Change this if multiple shots of the same image
-delay = 0       #Delay of the images above, in ms
-storage = "./multicam/"
+cam_port = 0                #Change this if you have multiple cameras
+multishot = 8               #Change this if multiple shots of the same image
+delay = 1.875                #Delay of the images above, in seconds
+storage = "./multicam/"     #Root of storage
+setUUID = True              #If true, images will have UUID rather than names
 
 # Make Storage
 try:
@@ -64,10 +66,39 @@ while settings_set != "y":
     print("If these settings look incorrect, view the configurations at the top of the code or try again")
     settings_set = input("Continue with these settings? (y/n): ")
 
+# Cam Test
+
+print("MultiCam will now show a live preview of the camera. Align the object and camera properly")
+print("then hit escape on the preview window\n")
+
+width = int(cam.get(3))
+height = int(cam.get(4))
+
+cv.namedWindow("preview")
+
+if cam.isOpened(): # try to get the first frame
+    rval, frame = cam.read()
+else:
+    rval = False
+
+while rval:
+    cv.line(frame, pt1=(0,int(height/2)), pt2=(width,int(height/2)), color=(0,255,0), thickness=1)
+    cv.line(frame, pt1=(int(width/2),0), pt2=(int(width/2),height), color=(0,255,0), thickness=1)
+    cv.imshow("preview", frame)
+    rval, frame = cam.read()
+    key = cv.waitKey(20)
+    if key == 27: # exit on ESC
+        break
+
+cam.release()
+cv.destroyWindow("preview")
+
 # Cycle
 
 print("\nMultiCam will now start taking photos. There will be a pause between each iteration to adjust the object.")
 input("Press enter to take the first photo of batch 1...\n")
+
+cam = cv.VideoCapture(cam_port)
 
 for z in range(batches):
     for y in range(iterations):
@@ -77,8 +108,16 @@ for z in range(batches):
             result, image = cam.read()
 
             if result:
-                if (multishot == 1): cv.imwrite(f"{storage}{label}{z}-{y}.png", image)
-                else: cv.imwrite(f"{storage}{label}{z}-{y}-{x}.png", image)
+                if setUUID == False:
+                    if (multishot == 1): cv.imwrite(f"{storage}{label}{z}-{y}.png", image)
+                    else: cv.imwrite(f"{storage}{label}{z}-{y}-{x}.png", image)
+                else:
+                    try:
+                        fullPath = storage + "/" + label + "/"
+                        os.mkdir(fullPath)
+                    except:
+                        pass
+                    cv.imwrite(f"{fullPath}{uuid.uuid4()}.png", image)
             else:
                 print(f"Failed to capture image")
                 failed += 1
