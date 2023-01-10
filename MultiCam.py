@@ -16,10 +16,10 @@ print('''
 print("\nLoading configs and camera...")
 # Configs
 cam_port = 0                #Change this if you have multiple cameras
-multishot = 8               #Change this if multiple shots of the same image
-delay = 1.875                #Delay of the images above, in seconds
+multishot = 1               #Change this if multiple shots of the same image
+delay = 0                   #Delay of the images above, in seconds
 storage = "./multicam/"     #Root of storage
-setUUID = True              #If true, images will have UUID rather than names
+setUUID = False             #If true, images will have UUID rather than names
 
 # Make Storage
 try:
