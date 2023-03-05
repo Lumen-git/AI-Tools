@@ -57,6 +57,7 @@ if (testSplitPercent != 0):
 
 for each in tqdm(os.listdir(src)):
     if (".DS_Store" in each): continue
+    if (".ini" in each): continue
     ## Resize image to have a height of convertHeight
     png = Image.open(os.path.join(src,each))
     width, height = png.size
