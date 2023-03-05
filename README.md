@@ -8,5 +8,8 @@ Bulk resize and crop images from the center, as well as giving them UUIDs. Can a
 ## CV Backgrounds
 Various printable backgrounds I used to experiment and add diversity to computer vision datasets
 
-## MultiCam
+## MultiCam.py
 Tool to rapidly build datasets via webcam
+
+## Babel.py
+Renames all files in directory using a sequential index, UUID, or SHA256 hash and moves them to a new file
